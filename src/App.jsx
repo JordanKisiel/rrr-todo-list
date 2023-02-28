@@ -9,19 +9,16 @@ function App() {
   /*
     TODO:
     -add edit task functionality
-      -this will require some state change of the task:
-        -whether it's in editing mode or not
-          -this will allow me to conditionally render a text input or the task description
-          -which means that I need to update my data format
-        -I'll also need some state to hold the text input for the editing mode
         -I'll also need the editing button to change from edit to some form of submit button
-        -I'll also need to make sure that when one editing button is clicked, all other tasks leave edit mode
+        -When this submit button is clicked, change the editingTaskID back to null
   */
 
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState(() => {
     return JSON.parse(localStorage.getItem("storedTasks")) || defaultTasks.tasks
   })
+  const [editingTaskId, setEditingTaskId] = useState(null)
+  const [editingTaskInput, setEditingTaskInput] = useState("")
 
   useEffect(() => {
     const stringifiedTasks = JSON.stringify(tasks)
@@ -71,6 +68,32 @@ function App() {
     setNewTask("") //empty out input after adding task
   }
 
+  function handleEnterEditMode(taskId, taskDesc) {
+    setEditingTaskId(taskId)
+    setEditingTaskInput(taskDesc)
+  }
+
+  function handleEditTask(input) {
+    setEditingTaskInput(input)
+
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) => {
+        if (task.id === editingTaskId) {
+          return {
+            ...task,
+            taskDescription: input,
+          }
+        } else {
+          return task
+        }
+      })
+    })
+  }
+
+  function handleSubmitEdit() {
+    setEditingTaskId(null)
+  }
+
   return (
     <Container maxWidth="md">
       <Paper elevation={0}>
@@ -86,8 +109,13 @@ function App() {
       <Paper elevation={3}>
         <TaskList
           tasks={tasks}
+          editingTaskId={editingTaskId}
+          editingTaskInput={editingTaskInput}
           handleDeleteTask={handleDeleteTask}
           handleCheckTask={handleCheckTask}
+          handleEnterEditMode={handleEnterEditMode}
+          handleEditTask={handleEditTask}
+          handleSubmitEdit={handleSubmitEdit}
         />
       </Paper>
     </Container>

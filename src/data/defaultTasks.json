@@ -1,0 +1,19 @@
+{
+  "tasks": [
+    {
+      "id": 0,
+      "isDone": false,
+      "taskDescription": "These are your first 3 tasks."
+    },
+    {
+      "id": 1,
+      "isDone": false,
+      "taskDescription": "Check them off to complete them."
+    },
+    {
+      "id": 2,
+      "isDone": false,
+      "taskDescription": "You're already getting things done!"
+    }
+  ]
+}

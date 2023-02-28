@@ -6,13 +6,6 @@ import defaultTasks from "./data/defaultTasks.json"
 import { useEffect, useState } from "react"
 
 function App() {
-  /*
-    TODO:
-    -add edit task functionality
-        -I'll also need the editing button to change from edit to some form of submit button
-        -When this submit button is clicked, change the editingTaskID back to null
-  */
-
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState(() => {
     return JSON.parse(localStorage.getItem("storedTasks")) || defaultTasks.tasks

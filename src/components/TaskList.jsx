@@ -2,7 +2,6 @@ import { CheckCircle, Delete, Edit } from "@mui/icons-material"
 import {
   Box,
   Checkbox,
-  Divider,
   IconButton,
   List,
   ListItem,

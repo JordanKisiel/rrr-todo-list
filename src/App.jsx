@@ -3,11 +3,12 @@ import AddTask from "./components/AddTask"
 import Header from "./components/Header"
 import TaskList from "./components/TaskList"
 import defaultTasks from "./data/defaultTasks.json"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useReducer } from "react"
+import tasksReducer from "./reducers/TasksReducer"
 
 function App() {
   const [newTask, setNewTask] = useState("")
-  const [tasks, setTasks] = useState(() => {
+  const [tasks, dispatch] = useReducer(tasksReducer, null, () => {
     return JSON.parse(localStorage.getItem("storedTasks")) || defaultTasks.tasks
   })
   const [editingTaskId, setEditingTaskId] = useState(null)
@@ -24,38 +25,24 @@ function App() {
   }
 
   function handleCheckTask(taskId) {
-    setTasks((prevTasks) => {
-      return prevTasks.map((task) => {
-        if (task.id !== taskId) {
-          return task
-        } else {
-          return {
-            ...task,
-            isDone: !task.isDone,
-          }
-        }
-      })
+    dispatch({
+      type: "check_task",
+      taskId: taskId,
     })
   }
 
   function handleDeleteTask(taskId) {
-    setTasks((prevTasks) => {
-      return prevTasks.filter((task) => {
-        return task.id !== taskId
-      })
+    dispatch({
+      type: "delete_task",
+      taskId: taskId,
     })
   }
 
   function handleAddTask(taskId, taskDesc) {
-    setTasks((prevTasks) => {
-      return [
-        ...prevTasks,
-        {
-          id: taskId,
-          isDone: false,
-          taskDescription: taskDesc,
-        },
-      ]
+    dispatch({
+      type: "add_task",
+      taskId: taskId,
+      taskDesc: taskDesc,
     })
 
     setNewTask("") //empty out input after adding task
@@ -69,17 +56,10 @@ function App() {
   function handleEditTask(input) {
     setEditingTaskInput(input)
 
-    setTasks((prevTasks) => {
-      return prevTasks.map((task) => {
-        if (task.id === editingTaskId) {
-          return {
-            ...task,
-            taskDescription: input,
-          }
-        } else {
-          return task
-        }
-      })
+    dispatch({
+      type: "edit_task",
+      editingTaskId: editingTaskId,
+      input: input,
     })
   }
 
